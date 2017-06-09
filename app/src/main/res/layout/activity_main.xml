@@ -15,11 +15,10 @@
         android:textSize="72sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.576"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.216" />
+        app:layout_constraintVertical_bias="0.326" />
 
     <Button
         android:id="@+id/ResetTimer"
@@ -52,5 +51,12 @@
         tools:layout_editor_absoluteY="0dp"
         tools:layout_editor_absoluteX="20dp"
         app:layout_constraintGuide_percent="0.055555556" />
+
+    <Spinner
+        android:id="@+id/facial_spinner"
+        android:layout_width="344dp"
+        android:layout_height="55dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="3dp" />
 
 </android.support.constraint.ConstraintLayout>

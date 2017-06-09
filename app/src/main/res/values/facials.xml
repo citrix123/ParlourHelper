@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="facial_array">
+        <item>Chocolate Facial</item>
+        <item>Wine Facial</item>
+        <item>Shehnaz Facial</item>
+        <item>Gold Facial</item>
+        <item>Fruits Facial</item>
+    </string-array>
+</resources>

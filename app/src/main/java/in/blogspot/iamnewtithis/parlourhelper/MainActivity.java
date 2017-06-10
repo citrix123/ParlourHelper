@@ -12,22 +12,51 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     Button StartTimer ;
     Button ResetTimer ;
-
     TextView Timer;
-
     Spinner facial_spinner;
 
+    Map<String, ArrayList<Integer>> FacialTime = new HashMap<String, ArrayList<Integer>>();
+    Map<String, String> FacialsMapping = new HashMap<String, String>();
 
     public static int min = 0;
     public static int sec = 0;
+    public static int TotalTime = 0;
+    public static ArrayList<Integer> valueOfFacial;
+
+    public void registerFacialTime(){
+        FacialsMapping.put("Chocolate Facial" , "Normal Facial");
+        FacialsMapping.put("Fruit Facial" , "Normal Facial");
+        FacialsMapping.put("Shehnaz Facial" , "Special Facial");
+        FacialsMapping.put("Gold Facial" , "Special Facial");
+        FacialsMapping.put("Wine Facial" , "Special Facial");
+
+        FacialTime.put("Special Facial", new ArrayList<Integer>(Arrays.asList(new Integer[]{7,7,6,9,9,7})));
+        FacialTime.put("Normal Facial", new ArrayList<Integer>(Arrays.asList(new Integer[]{7,6,9,10,8})));
+    }
+
+    public ArrayList<Integer> getValueOfFacial(String Name){
+        String FacialName;
+        FacialName = FacialsMapping.get(Name);
+        for (int i = 0; i < FacialTime.get(FacialName).size(); i++) {
+            TotalTime += FacialTime.get(FacialName).get(i);
+            FacialTime.get(FacialName).set(i, TotalTime);
+            System.out.println(FacialTime.get(FacialName).get(i));
+        }
+        return FacialTime.get(FacialName);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        registerFacialTime();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -35,9 +64,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         StartTimer = (Button)findViewById(R.id.StartTimer);
         ResetTimer = (Button)findViewById(R.id.ResetTimer);
-
         Timer = (TextView)findViewById(R.id.Timer);
-
         facial_spinner = (Spinner)findViewById(R.id.facial_spinner);
 
 //      Fill Spinner with Values
@@ -49,13 +76,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         facial_spinner.setOnItemSelectedListener(this);
 
         final CountDownTimer[] start = new CountDownTimer[1];
-
+//        for (int i = 0; i < valueOfFacial.size(); i++) {
+//            System.out.println(valueOfFacial.get(i));
+//        }
 //      Timer event start.
         StartTimer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 StartTimer.setEnabled(false);
-                start[0] = new CountDownTimer(60000, 1000) {
+//                Use Total Time -> Get from the Spinner.
+                TotalTime = TotalTime * 60 * 1000;
+                System.out.println(TotalTime);
+                start[0] = new CountDownTimer(TotalTime , 1000) {
 
                     @Override
                     public void onTick(long millisUntilFinished) {
@@ -66,6 +98,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             min ++;
                         }
                         String str = Integer.toString(min) + ":" + Integer.toString(sec) ;
+                        if (valueOfFacial.contains(min)){
+                            System.out.println("I am going to beep");
+                            toneGenerator.startTone(ToneGenerator.TONE_CDMA_CONFIRM, 150);
+                            valueOfFacial.set(valueOfFacial.indexOf(min), 0);
+                        }
                         Timer.setText(str);
 
                     }
@@ -99,6 +136,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         TextView myText = (TextView)view;
         Toast.makeText(this, "You Selected "+myText.getText() , Toast.LENGTH_SHORT).show();
+        TotalTime = 0;
+        valueOfFacial = getValueOfFacial((String) myText.getText());
+        for (int i = 0; i < valueOfFacial.size(); i++) {
+            System.out.println(valueOfFacial.get(i));
+        }
     }
 
     @Override
